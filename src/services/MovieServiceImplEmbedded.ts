@@ -1,7 +1,6 @@
 import {MovieService} from "./MovieService.js";
 import {Movie} from "../model/Movie.js";
-import {MovieMongooseModel, MovieMongooseSchema} from "../model/MovieMongooseModel.js";
-import {HttpError} from "../errorHandler/HttpError.js";
+import {MovieMongooseModel} from "../model/MovieMongooseModel.js";
 
 export class MovieServiceImplEmbedded implements MovieService {
 
