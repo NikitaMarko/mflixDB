@@ -28,17 +28,24 @@ export class MovieServiceImplEmbedded implements MovieService {
     }
 
     async getMoviesWithLowerImdbThanTomatoes(): Promise<Movie[]> {
-        const result = await MovieMongooseModel.aggregate([
-            {
-                $match: {
-                    "imdb.rating": { $exists: true },
-                    "tomatoes.viewer.rating": { $exists: true },
-                    $expr: {
-                        $lt: ["$imdb.rating", "$tomatoes.viewer.rating"]
-                    }
-                }
-            }
-        ]);
+        const result = await MovieMongooseModel.
+            find({
+            $expr:{$lt:['$imdb.rating', '$tomatoes.viewer.rating']}
+        })
+            .sort({_id:-1})
+            .limit(2)
+
+        // aggregate([
+        //     {
+        //         $match: {
+        //             "imdb.rating": { $exists: true },
+        //             "tomatoes.viewer.rating": { $exists: true },
+        //             $expr: {
+        //                 $lt: ["$imdb.rating", "$tomatoes.viewer.rating"]
+        //             }
+        //         }
+        //     }
+        // ]);
 
         return result as Movie[];
     }
@@ -46,7 +53,7 @@ export class MovieServiceImplEmbedded implements MovieService {
     async getTopAwardedMovies(): Promise<Movie[]> {
         const topAwardedMovies = await MovieMongooseModel
             .find({})
-            .sort({'awards.wins':-1})
+            .sort({'awards.wins':1})
             .limit(2)
 
         // aggregate([
