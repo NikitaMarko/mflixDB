@@ -9,21 +9,23 @@ export class MovieServiceImplEmbedded implements MovieService {
             genres.length !== 2 ||
             !genres.includes("Action") ||
             !genres.includes("Comedy")
-        ) {
+        )
             throw new Error("Must search exactly for genres 'Action' and 'Comedy'");
-        }
 
         const result = await MovieMongooseModel
-            .find({ genres: { $all: genres } })
-            .lean();
+            .find(
+                { genres: { $all: genres }
+                })
 
         return result as Movie[];
     }
 
     async getMoviesInLanguage(lang:string): Promise<Movie[]> {
         const movies = await MovieMongooseModel
-            .find({languages:lang})
-            .lean()
+            .find(
+                {languages:lang}
+            )
+
         return movies as Movie[];
     }
 
