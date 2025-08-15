@@ -10,5 +10,5 @@ export interface MovieService {
 
     getTopAwardedMovies: () => Promise<Movie[]>;
 
-    groupMoviesByImdbRatingFrom2010: () => Promise<Record<number, string[]>>;
+    groupMoviesByImdbRatingFrom2010: () => Promise<Movie[]>;
 }

@@ -44,46 +44,55 @@ export class MovieServiceImplEmbedded implements MovieService {
     }
 
     async getTopAwardedMovies(): Promise<Movie[]> {
-        const topAwardedMovies = await MovieMongooseModel.aggregate([
-            {
-                $match: {
-                    "awards.wins": { $ne: null }
-                }
-            },
-            {
-                $sort: {
-                    "awards.wins": -1
-                }
-            },
-            {
-                $limit: 2
-            }
-        ]);
+        const topAwardedMovies = await MovieMongooseModel
+            .find({})
+            .sort({'awards.wins':-1})
+            .limit(2)
+
+        // aggregate([
+        //     {
+        //         $match: {
+        //             "awards.wins": { $ne: null }
+        //         }
+        //     },
+        //     {
+        //         $sort: {
+        //             "awards.wins": -1
+        //         }
+        //     },
+        //     {
+        //         $limit: 2
+        //     }
+        // ]);
 
         return topAwardedMovies as Movie[];
     }
 
-    async groupMoviesByImdbRatingFrom2010(): Promise<Record<number, string[]>> {
+    async groupMoviesByImdbRatingFrom2010(): Promise<Movie[]> {
         const moviesByImdbRating = await MovieMongooseModel.aggregate([
             {
                 $match: {
-                    year: 2010,
-                    "imdb.rating": { $exists: true },
-                    title: { $exists: true }
+                    year: 2010
+                    // "imdb.rating": { $exists: true },
+                    // title: { $exists: true }
                 }
             },
             {
                 $group: {
                     _id: "$imdb.rating",
                     titles: { $push: "$title" }
-                }
+                }},
+            {
+                $sort:{
+                    _id:-1}
             }
         ]);
 
-        return moviesByImdbRating.reduce((acc, group) => {
-            acc[group._id] = group.titles;
-            return acc;
-        }, {} as Record<number, string[]>);
+        return moviesByImdbRating as Movie[];
+        //     .reduce((acc, group) => {
+        //     acc[group._id] = group.titles;
+        //     return acc;
+        // }, {} as Record<number, string[]>);
     }
 
 }
